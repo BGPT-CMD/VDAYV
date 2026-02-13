@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Valentine's Day</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      background: radial-gradient(circle at bottom, #0b0c2a, #1a1a40);
+      color: #ff4d94;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
+      opacity: 0; /* fade-in start */
+      transition: opacity 1s ease;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    h1 {
+      font-size: 3em;
+      z-index: 2;
+      position: relative;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>💖 Happy Valentine's Day! Have a safe trip! 💖</h1>
+  <canvas id="night"></canvas>
+
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.add('fade-in');
+    });
+
+    const canvas = document.getElementById('night');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const heartStarsCount = 150;
+    const heartStars = [];
+    const heartEmoji = '❤️';
+
+    // Twinkling heart stars
+    for (let i = 0; i < heartStarsCount; i++) {
+      heartStars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 15 + 10,
+        alpha: Math.random(),
+        alphaSpeed: Math.random() * 0.02 + 0.01
+      });
+    }
+
+    function drawHeartStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      heartStars.forEach(s => {
+        ctx.font = s.size + "px Arial";
+        ctx.globalAlpha = s.alpha;
+        ctx.fillText(heartEmoji, s.x, s.y);
+        s.alpha += (Math.random() - 0.5) * s.alphaSpeed;
+        if (s.alpha > 1) s.alpha = 1;
+        if (s.alpha < 0) s.alpha = 0;
+      });
+    }
+
+    // Floating hearts overlay
+    const heartsCount = 20;
+    const floatingHearts = [];
+    for (let i = 0; i < heartsCount; i++) {
+      floatingHearts.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 30 + 15,
+        speed: Math.random() * 1 + 0.5
+      });
+    }
+
+    function drawFloatingHearts() {
+      floatingHearts.forEach(h => {
+        ctx.font = h.size + 'px Arial';
+        ctx.fillText(heartEmoji, h.x, h.y);
+        h.y -= h.speed;
+        if (h.y < -h.size) {
+          h.y = canvas.height + h.size;
+          h.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function animate() {
+      drawHeartStars();
+      drawFloatingHearts();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
